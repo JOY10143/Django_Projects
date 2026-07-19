@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add Teacher
+{% endblock %}
+
+{% block content %}
+
+<h2>Add Teacher</h2>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <input
+        type="text"
+        name="full_name"
+        class="form-control mb-3"
+        placeholder="Full Name"
+        required>
+
+    <input
+        type="email"
+        name="email"
+        class="form-control mb-3"
+        placeholder="Email"
+        required>
+
+    <input
+        type="text"
+        name="phone_number"
+        class="form-control mb-3"
+        placeholder="Phone Number"
+        required>
+
+    <input
+        type="text"
+        name="subject"
+        class="form-control mb-3"
+        placeholder="Subject"
+        required>
+
+    <button type="submit" class="btn btn-success">
+        Save Teacher
+    </button>
+
+    <a href="{% url 'teacher_list' %}" class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+{% endblock %}

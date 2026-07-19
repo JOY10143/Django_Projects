@@ -1,24 +1,78 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from .models import Student
 
-# Create your views here.
-# A function to return a message
+
+# Home Page
 def home(request):
-    # return HttpResponse("Welcome to Denory Academy! This is homepage of our students app.")
     return render(request, 'home.html')
 
-# The about page view
+
+# About Page
 def about(request):
-    # return HttpResponse("Welcome to the About page. Learn more about Denory Academy.")
     return render(request, 'about.html')
 
-# The contact page view
+
+# Contact Page
 def contact(request):
-    # return HttpResponse("Welcome to the Contact page. Reach for more information.")
     return render(request, 'contact.html')
 
+
 def courses(request):
-    return HttpResponse("Wlcome to the Courses page. Explore our available courses.")
+    return HttpResponse("Welcome to the Courses page.")
+
 
 def services(request):
-    return HttpResponse("Welcome to the Services page. Discover the services we offer.")
+    return HttpResponse("Welcome to the Services page.")
+
+
+# Read Operation
+def student_list(request):
+    students = Student.objects.all()
+    return render(request, "students_crud/student_list.html", {"students": students})
+
+
+# Create Operation
+def add_student(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        phone = request.POST.get("phone")
+        course = request.POST.get("course")
+
+        Student.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            course=course
+        )
+
+        return redirect("student_list")
+
+    return render(request, "students_crud/add_student.html")
+
+
+# Update Operation
+def edit_student(request, id):
+    student = get_object_or_404(Student, id=id)
+
+    if request.method == "POST":
+        student.name = request.POST["name"]
+        student.email = request.POST["email"]
+        student.phone = request.POST["phone"]
+        student.course = request.POST["course"]
+
+        student.save()
+
+        return redirect("student_list")
+
+    return render(request, "students_crud/edit_student.html", {
+        "student": student
+    })
+
+
+# Delete Operation
+def delete_student(request, id):
+    student = get_object_or_404(Student, id=id)
+    student.delete()
+    return redirect("student_list")
